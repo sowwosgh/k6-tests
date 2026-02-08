@@ -1,0 +1,2 @@
+echo "results.json" >> .gitignore
+echo "*.json" >> .gitignore
