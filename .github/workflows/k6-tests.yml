@@ -1,0 +1,40 @@
+﻿name: k6 Load Tests
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  k6-smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run smoke tests
+        uses: grafana/k6-action@v0.3.0
+        with:
+          filename: tests/smoke/api-health.js
+          flags: --summary-export=results/smoke/smoke-summary.json
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-smoke-results
+          path: results/smoke/
+  
+  k6-load-tests:
+    needs: k6-smoke-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run load tests
+        uses: grafana/k6-action@v0.3.0
+        with:
+          filename: tests/load/feed-load.js
+          flags: --out json=results/load/load-results.json
+      - name: Upload load results
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-load-results
+          path: results/load/
