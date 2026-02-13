@@ -40,13 +40,17 @@ npm run analyze
 
 ### Load тесты (нагрузочные)
 - \`tests/load/feed-load.js\` - нагрузка на ленту с фильтрацией
-- \`tests/load/feed-filters.js\` - тестирование фильтров
+- \`tests/load/cards-load.js\` - нагрузка на карточки/ленты по типам
+- \`tests/load/search-load.js\` - нагрузка на поисковые запросы
 
 ### Stress тесты (предельная нагрузка)
-*Будут добавлены*
+- \`tests/stress/feed-stress.js\` - стресс-тест ленты
 
 ### Сценарии (бизнес-логика)
-*Будут добавлены*
+- \`tests/scenarios/registration-flow.js\` - сценарий регистрации
+- \`tests/scenarios/payment-flow.js\` - сценарий платежей
+- \`tests/scenarios/user-journey.js\` - пользовательский путь
+- \`tests/scenarios/messaging-flow.js\` - сценарий сообщений
 
 ## 🔧 Конфигурация
 
@@ -69,7 +73,7 @@ npm run analyze
 
 ## 📝 Статус тестирования
 
-См. [TESTING_STATUS.md](TESTING_STATUS.md)
+См. [_archive/TESTING_STATUS.md](_archive/TESTING_STATUS.md)
 
 ## 🔮 Планы
 

@@ -1,7 +1,6 @@
-﻿// Заглушка для будущей авторизации
+﻿// Единый источник токена для k6-сценариев
 export function getAuthToken() {
-  // TODO: Реализовать когда будет auth API
-  return 'test-token-placeholder';
+  return __ENV.AUTH_TOKEN || 'test-token-placeholder';
 }
 
 export function authHeaders() {
