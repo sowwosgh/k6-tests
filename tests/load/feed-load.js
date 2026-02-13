@@ -1,6 +1,6 @@
 ﻿import http from 'k6/http';
 import { check } from 'k6';
-import { checkStatus, checkJsonArray } from '../../utils/checks.js';
+import { checkJsonArray, isJsonResponse, parseJsonSafe } from '../../utils/checks.js';
 
 export const options = {
   stages: [
@@ -14,13 +14,18 @@ export const options = {
   }
 };
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
 const CARD_TYPES = ['worker', 'company', 'brigade', 'contractor'];
 
 export default function () {
   // Тест фильтрации
   const filterRes = http.get(`${BASE_URL}/api/feed?city=moscow&limit=5`);
-  checkStatus(filterRes, 'Filter API');
+  const filterData = parseJsonSafe(filterRes);
+  check(filterRes, {
+    'Filter API status 200': (r) => r.status === 200,
+    'Filter API content-type json': (r) => isJsonResponse(r),
+    'Filter API is JSON array': () => Array.isArray(filterData),
+  });
   
   // Тест типов карточек
   CARD_TYPES.forEach(type => {

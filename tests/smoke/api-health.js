@@ -1,6 +1,6 @@
 ﻿import http from 'k6/http';
 import { check } from 'k6';
-import { checkStatus } from '../../utils/checks.js';
+import { isJsonResponse, parseJsonSafe } from '../../utils/checks.js';
 
 export const options = {
   vus: 1,
@@ -11,10 +11,15 @@ export const options = {
   }
 };
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
 
 export default function () {
   // Проверка ленты
   const feedRes = http.get(`${BASE_URL}/api/feed?limit=1`);
-  checkStatus(feedRes, 'Feed API');
+  const feedData = parseJsonSafe(feedRes);
+  check(feedRes, {
+    'Feed API status 200': (r) => r.status === 200,
+    'Feed API content-type json': (r) => isJsonResponse(r),
+    'Feed API is JSON array': () => Array.isArray(feedData),
+  });
 }
