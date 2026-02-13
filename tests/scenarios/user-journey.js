@@ -10,34 +10,29 @@ export let options = {
   duration: '3m',
 };
 
+function checkFeedArrayResponse(response, title) {
+  const parsedBody = parseJsonSafe(response);
+
+  check(response, {
+    [`${title} loaded`]: (r) => r.status === 200,
+    [`${title} is json`]: (r) => isJsonResponse(r),
+    [`${title} is array`]: () => Array.isArray(parsedBody),
+  });
+}
+
 export default function () {
   // 1. Открыть ленту
-  let res = http.get(`${BASE_URL}/api/feed?limit=10`);
-  let data = parseJsonSafe(res);
-  check(res, {
-    'feed loaded': (r) => r.status === 200,
-    'feed is json': (r) => isJsonResponse(r),
-    'feed is array': () => Array.isArray(data),
-  });
+  let response = http.get(`${BASE_URL}/api/feed?limit=10`);
+  checkFeedArrayResponse(response, 'feed');
   sleep(2);
   
   // 2. Посмотреть карточки
-  res = http.get(`${BASE_URL}/api/feed?type=worker&limit=5`);
-  data = parseJsonSafe(res);
-  check(res, {
-    'cards loaded': (r) => r.status === 200,
-    'cards is json': (r) => isJsonResponse(r),
-    'cards is array': () => Array.isArray(data),
-  });
+  response = http.get(`${BASE_URL}/api/feed?type=worker&limit=5`);
+  checkFeedArrayResponse(response, 'cards');
   sleep(1);
   
   // 3. Применить фильтр
-  res = http.get(`${BASE_URL}/api/feed?search=it&city=moscow&limit=10`);
-  data = parseJsonSafe(res);
-  check(res, {
-    'filters applied': (r) => r.status === 200,
-    'filters is json': (r) => isJsonResponse(r),
-    'filters is array': () => Array.isArray(data),
-  });
+  response = http.get(`${BASE_URL}/api/feed?search=it&city=moscow&limit=10`);
+  checkFeedArrayResponse(response, 'filters');
   sleep(1);
 }

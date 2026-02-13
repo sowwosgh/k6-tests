@@ -21,51 +21,51 @@ export let options = {
 export default function () {
   const headers = buildHeaders();
 
-  const startData = JSON.stringify({
+  const conversationStartPayload = JSON.stringify({
     user_id: 2,
     initial_message: 'Hello from k6 test!',
   });
 
-  const startRes = http.post(`${BASE_URL}/api/conversations/start`, startData, { headers });
-  const startJson = parseJsonSafe(startRes);
+  const startResponse = http.post(`${BASE_URL}/api/conversations/start`, conversationStartPayload, { headers });
+  const startResponseBody = parseJsonSafe(startResponse);
 
-  const conversationId = startJson && startJson.conversation_id ? startJson.conversation_id : null;
+  const conversationId = startResponseBody?.conversation_id ?? null;
 
-  let sendRes = null;
+  let sendMessageResponse = null;
   if (conversationId) {
-    const messageData = JSON.stringify({ text: 'Follow-up from k6 test' });
-    sendRes = http.post(`${BASE_URL}/api/conversations/${conversationId}/messages`, messageData, { headers });
+    const sendMessagePayload = JSON.stringify({ text: 'Follow-up from k6 test' });
+    sendMessageResponse = http.post(`${BASE_URL}/api/conversations/${conversationId}/messages`, sendMessagePayload, { headers });
   }
 
-  const conversationsRes = http.get(`${BASE_URL}/api/conversations`, { headers });
-  const conversationsJson = parseJsonSafe(conversationsRes);
+  const conversationsResponse = http.get(`${BASE_URL}/api/conversations`, { headers });
+  const conversationsResponseBody = parseJsonSafe(conversationsResponse);
 
-  const authExpected = AUTH_TOKEN ? [200] : [401];
+  const expectedStatuses = AUTH_TOKEN ? [200] : [401];
 
-  check(startRes, {
-    'conversation start status expected': (r) => authExpected.includes(r.status),
+  check(startResponse, {
+    'conversation start status expected': (r) => expectedStatuses.includes(r.status),
     'conversation start json': (r) => isJsonResponse(r),
   });
 
   if (AUTH_TOKEN) {
-    check(sendRes, {
+    check(sendMessageResponse, {
       'message sent': (r) => r && r.status === 200,
       'message send json': (r) => r && isJsonResponse(r),
     });
   } else {
-    check(startRes, {
-      'message sent skipped without auth': () => sendRes === null,
+    check(startResponse, {
+      'message sent skipped without auth': () => sendMessageResponse === null,
     });
   }
 
-  check(conversationsRes, {
-    'conversations status expected': (r) => authExpected.includes(r.status),
+  check(conversationsResponse, {
+    'conversations status expected': (r) => expectedStatuses.includes(r.status),
     'conversations json': (r) => isJsonResponse(r),
     'conversations payload valid': () => {
       if (!AUTH_TOKEN) {
-        return conversationsJson !== null;
+        return conversationsResponseBody !== null;
       }
-      return conversationsJson !== null && Array.isArray(conversationsJson.conversations);
+      return conversationsResponseBody !== null && Array.isArray(conversationsResponseBody.conversations);
     },
   });
 }

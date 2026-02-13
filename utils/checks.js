@@ -25,12 +25,10 @@ export function checkStatus(res, name) {
 }
 
 export function checkJsonArray(res, name) {
-  const parsed = parseJsonSafe(res);
+  const parsedBody = parseJsonSafe(res);
 
   return check(res, {
     [`${name} content-type json`]: () => isJsonResponse(res),
-    [`${name} is JSON array`]: (r) => {
-      return Array.isArray(parsed);
-    }
+    [`${name} is JSON array`]: () => Array.isArray(parsedBody)
   });
 }
