@@ -1,11 +1,41 @@
-﻿// Единый источник токена для k6-сценариев
-export function getAuthToken() {
-  return __ENV.AUTH_TOKEN || 'test-token-placeholder';
+﻿// Единый источник авторизации для k6-сценариев
+// Django использует session-based auth (cookie), не JWT
+
+export function getSessionCookie() {
+  return __ENV.SESSION_COOKIE || '';
 }
 
 export function authHeaders() {
-  return {
-    'Authorization': `Bearer ${getAuthToken()}`,
-    'Content-Type': 'application/json'
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
   };
+  
+  const cookie = getSessionCookie();
+  if (cookie) {
+    headers['Cookie'] = cookie;
+  }
+  
+  return headers;
+}
+
+export function loginAndGetSession(http, baseUrl, phone, password) {
+  const payload = JSON.stringify({ phone, password });
+  
+  const response = http.post(`${baseUrl}/api/auth/login`, payload, {
+    headers: { 'Content-Type': 'application/json' }
+  });
+  
+  if (response.status === 200) {
+    // Извлекаем sessionid из Set-Cookie
+    const setCookie = response.headers['Set-Cookie'] || response.headers['set-cookie'];
+    if (setCookie) {
+      const match = setCookie.match(/sessionid=([^;]+)/);
+      if (match) {
+        return match[1];
+      }
+    }
+  }
+  
+  return null;
 }
