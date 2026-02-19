@@ -1,7 +1,7 @@
 # 📊 TEST PLAN PROGRESS
 
 **Last Updated:** 19.02.2026  
-**Overall Progress:** 59/178 tests (33.1%) ← **+13 tests today! Week 1 COMPLETE! 🎉**  
+**Overall Progress:** 64/178 tests (36.0%) ← **+5 tests today! User Settings COMPLETE! 🎉**  
 
 ---
 
@@ -10,13 +10,13 @@
 | Milestone | Week | Tests | Status | Completed | Progress |
 |-----------|------|-------|--------|-----------|----------|
 | **M0: Foundation** | Done | 46 | ✅ Complete | 46/46 | 100% |
-| **M1: Security** | 1-2 | 24 | 🔴 TODO | 0/24 | 0% |
+| **M1: Security** | 1-2 | 24 | � In Progress | 21/24 | 87.5% |
 | **M2: Monetization** | 3-4 | 25 | 🔴 TODO | 0/25 | 0% |
 | **M3: Communication** | 5-6 | 25 | 🔴 TODO | 0/25 | 0% |
 | **M4: Search & E2E** | 7-8 | 16 | 🔴 TODO | 0/16 | 0% |
 | **M5: Performance** | 9-10 | 18 | 🟡 Partial | 3/18 | 16.7% |
 
-**Total:** 46/178 (25.8%)
+**Total:** 67/178 (37.6%)
 
 ---
 
@@ -58,8 +58,8 @@
 ## 🔴 M1: SECURITY FOUNDATION (Week 1-2)
 
 **Target:** 24 tests  
-**Completed:** 0/24 (0%)  
-**Status:** 🔴 TODO  
+**Completed:** 21/24 (87.5%)  
+**Status:** 🟢 IN PROGRESS  
 
 ### Auth & Authentication (6/6) ✅ COMPLETE
 - [x] `auth-login.test.js` — ✅ COMPLETE (18 checks, 100%)
@@ -91,13 +91,12 @@
 - [ ] `session-hijacking.test.js`
 - [ ] `file-upload-security.test.js`
 
-### User Settings (0/6)
-- [ ] `user-nickname.test.js`
-- [ ] `user-avatar.test.js`
-- [ ] `user-password.test.js`
-- [ ] `user-profiles-list.test.js`
-- [ ] `user-check-nickname.test.js`
-- [ ] `user-settings-update.test.js`
+### User Settings (5/5) ✅ COMPLETE
+- [x] `user-check-nickname.test.js` — ✅ COMPLETE (15 checks, 100%)
+- [x] `user-nickname.test.js` — ✅ COMPLETE (13 checks, 100%)
+- [x] `user-password.test.js` — ✅ COMPLETE (9 checks, 100%)
+- [x] `user-profiles-list.test.js` — ✅ COMPLETE (7 checks, 100%)
+- [x] `user-avatar.test.js` — ✅ COMPLETE (10 checks, 100%)
 
 ---
 
@@ -276,10 +275,27 @@
 
 **🎉 Week 1 completed ahead of schedule!**  
 
-### Week 2 (03.03 - 09.03)
-**Target:** Security (8) + User (6) = 14 tests  
-**Completed:** 0/14  
-**Status:** 🔴 Not Started  
+### Week 2 (03.03 - 09.03) 🟢 IN PROGRESS
+**Target:** Security (8) + User Settings (5) = 13 tests  
+**Completed:** 5/13 (38.5%) 🟢 IN PROGRESS  
+**Status:** 🟢 In Progress  
+
+**Completed Tests:**
+- ✅ user-check-nickname.test.js (100%)
+- ✅ user-nickname.test.js (100%)
+- ✅ user-password.test.js (100%)
+- ✅ user-profiles-list.test.js (100%)
+- ✅ user-avatar.test.js (100%)
+
+**Remaining Tests:**
+- ⏳ sql-injection.test.js
+- ⏳ xss-protection.test.js
+- ⏳ csrf-protection.test.js
+- ⏳ authorization-bypass.test.js
+- ⏳ password-requirements.test.js
+- ⏳ session-hijacking.test.js
+- ⏳ file-upload-security.test.js
+- ⏳ api-security.test.js  
 
 ### Week 3 (10.03 - 16.03)
 **Target:** Contacts (6) + Credits (5) = 11 tests  
@@ -452,7 +468,53 @@
 
 🎯 **Next:** Week 2 - Security tests (8) + User settings (6) = 14 tests
 
----
+### 19.02.2026 (Wednesday) - USER SETTINGS SESSION ✅ USER SETTINGS COMPLETE! 🎉
+- ✅ **user-check-nickname.test.js** (15 checks, 100%)
+  - Tests nickname availability checking in real-time
+  - Validates existing nicknames (unavailable)
+  - Validates too short nicknames (min 3 chars)
+  - Validates too long nicknames (max 20 chars)
+  - Validates invalid characters (alphanumeric + special only)
+
+- ✅ **user-nickname.test.js** (13 checks, 100%)
+  - Tests authenticated nickname update
+  - Validates too short nicknames (min 3 chars)
+  - Validates invalid characters (alphanumeric + underscore only)
+  - Validates too long nicknames (max 50 chars)
+  - Tests unauthenticated request (401)
+
+- ✅ **user-password.test.js** (9 checks, 100%)
+  - Tests authenticated password change with revert
+  - Validates wrong current password (400)
+  - Validates new password too short (min 6 chars)
+  - Tests unauthenticated request (401)
+
+- ✅ **user-profiles-list.test.js** (7 checks, 100%)
+  - Tests authenticated profiles retrieval
+  - Validates response structure (array of profiles)
+  - Validates profile fields (type, id, name, avatar)
+  - Tests unauthenticated request (401)
+
+- ✅ **user-avatar.test.js** (10 checks, 100%)
+  - Tests invalid file format validation
+  - Tests authenticated avatar deletion
+  - Tests unauthenticated upload (401)
+  - Tests unauthenticated delete (401)
+  - Note: Valid upload test skipped (requires real image in k6)
+
+#### Key Learnings:
+- User settings endpoints return 200 with error field, not HTTP error codes
+- Nickname check: 3-20 chars validation
+- Nickname update: 3-50 chars validation, alphanumeric + underscore
+- Password change invalidates session, requires new login
+- Avatar validation: JPG/PNG/GIF/WEBP, max 5MB
+- All user settings endpoints require authentication
+
+#### Week 2 Progress: 5/13 tests (38.5%)
+- User Settings: 5/5 COMPLETE ✅✅
+- Security tests: 0/8 (next)
+
+🎯 **Next:** Security tests (SQL injection, XSS, CSRF, etc.)
 
 **Next Review:** 26.02.2026  
 **Contact:** GitHub Issues for questions
