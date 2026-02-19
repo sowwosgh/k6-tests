@@ -263,8 +263,8 @@ export default function() {
 // CUSTOM SUMMARY — красивый вывод результатов
 // ═══════════════════════════════════════════════════════════════════════
 export function handleSummary(data) {
-  const checksPassed = data.metrics.checks ? (data.metrics.checks.passes || 0) : 0;
-  const checksFailed = data.metrics.checks ? (data.metrics.checks.fails || 0) : 0;
+  const checksPassed = data.metrics.checks ? (data.metrics.checks.values.passes || 0) : 0;
+  const checksFailed = data.metrics.checks ? (data.metrics.checks.values.fails || 0) : 0;
   const checksTotal = checksPassed + checksFailed;
   const checkRate = checksTotal > 0 ? ((checksPassed / checksTotal) * 100).toFixed(2) : '0.00';
   
