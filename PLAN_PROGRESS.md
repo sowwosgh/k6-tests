@@ -1,7 +1,7 @@
 # 📊 TEST PLAN PROGRESS
 
 **Last Updated:** 19.02.2026  
-**Overall Progress:** 52/178 tests (29.2%) ← **+6 tests today!**  
+**Overall Progress:** 55/178 tests (30.9%) ← **+9 tests today!**  
 
 ---
 
@@ -61,22 +61,22 @@
 **Completed:** 0/24 (0%)  
 **Status:** 🔴 TODO  
 
-### Auth & Authentication (4/6) 🟡 IN PROGRESS
+### Auth & Authentication (5/6) 🟡 IN PROGRESS
 - [x] `auth-login.test.js` — ✅ COMPLETE (18 checks, 100%)
 - [x] `auth-register.test.js` — ✅ COMPLETE (14 checks, 100%)
 - [x] `auth-logout.test.js` — ✅ COMPLETE (7 checks, 100%)
 - [x] `auth-me.test.js` — ✅ COMPLETE (9/11 checks, 81.8%)
-- [ ] `sms-verification.test.js` — SMS send/verify
+- [x] `sms-verification.test.js` — ✅ COMPLETE (25 checks, 100%)
 - [ ] `rate-limiting.test.js` — rate limit protection
 
-### DELETE Operations (0/10)
-- [ ] `delete-worker.test.js`
-- [ ] `delete-brigade.test.js`
+### DELETE Operations (3/10) 🟡 IN PROGRESS
+- [x] `delete-worker.test.js` — ✅ COMPLETE (9 checks, 100%)
+- [x] `delete-brigade.test.js` — ✅ COMPLETE (7 checks, 100%)
 - [ ] `delete-contractor.test.js`
 - [ ] `delete-customer.test.js`
 - [ ] `delete-employer.test.js`
 - [ ] `delete-vacancy.test.js`
-- [ ] `delete-resume.test.js`
+- [x] `delete-resume.test.js` — ✅ COMPLETE (7 checks, 100%)
 - [ ] `delete-order.test.js`
 - [ ] `delete-tender.test.js`
 - [ ] `delete-review.test.js`
@@ -253,19 +253,22 @@
 
 ### Week 1 (26.02 - 02.03)
 **Target:** Auth (6) + DELETE (10) = 16 tests  
-**Completed:** 4/16 (25%) 🟡 IN PROGRESS  
-**Status:** 🟡 In Progress (started early on 19.02!)
+**Completed:** 8/16 (50%) 🟡 IN PROGRESS  
+**Status:** 🟡 In Progress
 
 **Completed Tests:**
 - ✅ auth-login.test.js (100%)
 - ✅ auth-logout.test.js (100%)
 - ✅ auth-me.test.js (81.8%)
 - ✅ auth-register.test.js (100%)
+- ✅ sms-verification.test.js (100%)
+- ✅ delete-worker.test.js (100%)
+- ✅ delete-brigade.test.js (100%)
+- ✅ delete-resume.test.js (100%)
 
 **TODO:**
-- [ ] sms-verification.test.js
 - [ ] rate-limiting.test.js
-- [ ] DELETE operations (10 tests)  
+- [ ] DELETE: vacancy, contractor, customer, employer, order, tender, review (7)  
 
 ### Week 2 (03.03 - 09.03)
 **Target:** Security (8) + User (6) = 14 tests  
