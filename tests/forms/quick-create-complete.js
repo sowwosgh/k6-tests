@@ -229,7 +229,7 @@ export default function() {
       phone: generatePhone(),
       email: 'order@test.com'
     };
-    testQuickCreate('order', payload, ['id']);
+    testQuickCreate('orders', payload, ['id']);
     sleep(0.3);
   });
 
@@ -252,7 +252,7 @@ export default function() {
       phone: generatePhone(),
       email: 'tender@test.com'
     };
-    testQuickCreate('tender', payload, ['id']);
+    testQuickCreate('tenders', payload, ['id']);
     sleep(0.3);
   });
 
@@ -263,10 +263,10 @@ export default function() {
 // CUSTOM SUMMARY — красивый вывод результатов
 // ═══════════════════════════════════════════════════════════════════════
 export function handleSummary(data) {
-  const checksPassed = data.metrics.checks ? data.metrics.checks.passes : 0;
-  const checksFailed = data.metrics.checks ? data.metrics.checks.fails : 0;
+  const checksPassed = data.metrics.checks ? (data.metrics.checks.passes || 0) : 0;
+  const checksFailed = data.metrics.checks ? (data.metrics.checks.fails || 0) : 0;
   const checksTotal = checksPassed + checksFailed;
-  const checkRate = checksTotal > 0 ? ((checksPassed / checksTotal) * 100).toFixed(2) : 0;
+  const checkRate = checksTotal > 0 ? ((checksPassed / checksTotal) * 100).toFixed(2) : '0.00';
   
   const failedRate = data.metrics.http_req_failed 
     ? (data.metrics.http_req_failed.values.rate * 100).toFixed(2) 
@@ -283,11 +283,11 @@ export function handleSummary(data) {
   console.log('\n╔═══════════════════════════════════════════════════════════╗');
   console.log('║     📊 QUICK CREATE COMPLETE TEST — SUMMARY              ║');
   console.log('╠═══════════════════════════════════════════════════════════╣');
-  console.log(`║  ✅ Checks Passed:    ${checksPassed}/${checksTotal} (${checkRate}%)${' '.repeat(Math.max(0, 24 - checksPassed.toString().length))}║`);
-  console.log(`║  ❌ Checks Failed:    ${checksFailed}${' '.repeat(Math.max(0, 38 - checksFailed.toString().length))}║`);
-  console.log(`║  🌐 HTTP Failures:    ${failedRate}% requests${' '.repeat(Math.max(0, 27 - failedRate.toString().length))}║`);
-  console.log(`║  ⏱️  Avg Duration:     ${avgDuration}ms${' '.repeat(Math.max(0, 36 - avgDuration.toString().length))}║`);
-  console.log(`║  📈 P95 Duration:     ${p95Duration}ms${' '.repeat(Math.max(0, 36 - p95Duration.toString().length))}║`);
+  console.log(`║  ✅ Checks Passed:    ${checksPassed}/${checksTotal} (${checkRate}%) ${' '.repeat(Math.max(0, 22 - String(checksPassed).length - String(checksTotal).length))}║`);
+  console.log(`║  ❌ Checks Failed:    ${checksFailed} ${' '.repeat(Math.max(0, 37 - String(checksFailed).length))}║`);
+  console.log(`║  🌐 HTTP Failures:    ${failedRate}% requests ${' '.repeat(Math.max(0, 26 - String(failedRate).length))}║`);
+  console.log(`║  ⏱️  Avg Duration:     ${avgDuration}ms ${' '.repeat(Math.max(0, 34 - String(avgDuration).length))}║`);
+  console.log(`║  📈 P95 Duration:     ${p95Duration}ms ${' '.repeat(Math.max(0, 34 - String(p95Duration).length))}║`);
   console.log('╠═══════════════════════════════════════════════════════════╣');
   console.log('║  ✅ Tested Forms (QuickCreateFormRule):                   ║');
   console.log('║     • Worker Profile                                      ║');
@@ -309,7 +309,7 @@ export function handleSummary(data) {
   console.log('╠═══════════════════════════════════════════════════════════╣');
   
   const overallStatus = checkRate >= 85 && failedRate < 15 ? '✅ PASSED' : '❌ FAILED';
-  console.log(`║  🎯 Overall Status:   ${overallStatus}${' '.repeat(Math.max(0, 33 - overallStatus.length))}║`);
+  console.log(`║  🎯 Overall Status:   ${overallStatus} ${' '.repeat(Math.max(0, 31 - overallStatus.length))}║`);
   console.log('╚═══════════════════════════════════════════════════════════╝\n');
   
   return {
