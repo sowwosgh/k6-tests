@@ -1,0 +1,91 @@
+﻿{
+  "name": "k6-tests",
+  "version": "1.0.0",
+  "description": "Performance tests for HR platform",
+  "scripts": {
+    "test:smoke": "k6 run tests/smoke/api-health.js",
+    "test:load": "k6 run tests/load/feed-load.js",
+    "test:stress": "k6 run tests/stress/feed-stress.js",
+    "test:scenarios": "k6 run tests/scenarios/user-journey.js",
+    "test:all": "powershell -File scripts/run-all-tests.ps1",
+    "test:registration": "k6 run tests/scenarios/registration-flow.js",
+    "test:payments": "k6 run tests/scenarios/payment-flow.js",
+    "test:messages": "k6 run tests/scenarios/messaging-flow.js",
+    
+    "auth:token": "powershell -File scripts/get-auth-token.ps1",
+    "auth:token:node": "node scripts/get-auth-token.js",
+    
+    "test:forms": "k6 run tests/forms/all-forms.js",
+    "test:forms:smoke": "k6 run --vus 1 --iterations 1 tests/forms/all-forms.js",
+    "test:forms:smoke:create": "k6 run tests/forms/smoke-test.js",
+    "test:forms:load": "k6 run --vus 10 --duration 30s tests/forms/all-forms.js",
+    
+    "test:forms:worker": "k6 run tests/forms/worker-create.js && k6 run tests/forms/worker-read.js && k6 run tests/forms/worker-update.js",
+    "test:forms:worker:create": "k6 run tests/forms/worker-create.js",
+    "test:forms:worker:read": "k6 run tests/forms/worker-read.js",
+    "test:forms:worker:update": "k6 run tests/forms/worker-update.js",
+    
+    "test:forms:brigade": "k6 run tests/forms/brigade-create.js && k6 run tests/forms/brigade-read.js && k6 run tests/forms/brigade-update.js",
+    "test:forms:brigade:create": "k6 run tests/forms/brigade-create.js",
+    "test:forms:brigade:read": "k6 run tests/forms/brigade-read.js",
+    "test:forms:brigade:update": "k6 run tests/forms/brigade-update.js",
+    
+    "test:forms:contractor": "k6 run tests/forms/contractor-create.js && k6 run tests/forms/contractor-read.js && k6 run tests/forms/contractor-update.js",
+    "test:forms:contractor:create": "k6 run tests/forms/contractor-create.js",
+    "test:forms:contractor:read": "k6 run tests/forms/contractor-read.js",
+    "test:forms:contractor:update": "k6 run tests/forms/contractor-update.js",
+    
+    "test:forms:customer": "k6 run tests/forms/customer-create.js && k6 run tests/forms/customer-read.js && k6 run tests/forms/customer-update.js",
+    "test:forms:customer:create": "k6 run tests/forms/customer-create.js",
+    "test:forms:customer:read": "k6 run tests/forms/customer-read.js",
+    "test:forms:customer:update": "k6 run tests/forms/customer-update.js",
+    
+    "test:forms:employer": "k6 run tests/forms/employer-create.js && k6 run tests/forms/employer-read.js && k6 run tests/forms/employer-update.js",
+    "test:forms:employer:create": "k6 run tests/forms/employer-create.js",
+    "test:forms:employer:read": "k6 run tests/forms/employer-read.js",
+    "test:forms:employer:update": "k6 run tests/forms/employer-update.js",
+    
+    "test:forms:company": "k6 run tests/forms/company-create.js && k6 run tests/forms/company-read.js && k6 run tests/forms/company-update.js",
+    "test:forms:company:create": "k6 run tests/forms/company-create.js",
+    "test:forms:company:read": "k6 run tests/forms/company-read.js",
+    "test:forms:company:update": "k6 run tests/forms/company-update.js",
+    
+    "test:forms:vacancy": "k6 run tests/forms/vacancy-create.js && k6 run tests/forms/vacancy-read.js && k6 run tests/forms/vacancy-update.js",
+    "test:forms:vacancy:create": "k6 run tests/forms/vacancy-create.js",
+    "test:forms:vacancy:read": "k6 run tests/forms/vacancy-read.js",
+    "test:forms:vacancy:update": "k6 run tests/forms/vacancy-update.js",
+    
+    "test:forms:resume": "k6 run tests/forms/resume-create.js && k6 run tests/forms/resume-read.js && k6 run tests/forms/resume-update.js",
+    "test:forms:resume:create": "k6 run tests/forms/resume-create.js",
+    "test:forms:resume:read": "k6 run tests/forms/resume-read.js",
+    "test:forms:resume:update": "k6 run tests/forms/resume-update.js",
+    
+    "test:forms:order": "k6 run tests/forms/order-create.js && k6 run tests/forms/order-read.js && k6 run tests/forms/order-update.js",
+    "test:forms:order:create": "k6 run tests/forms/order-create.js",
+    "test:forms:order:read": "k6 run tests/forms/order-read.js",
+    "test:forms:order:update": "k6 run tests/forms/order-update.js",
+    
+    "test:forms:tender": "k6 run tests/forms/tender-create.js && k6 run tests/forms/tender-read.js && k6 run tests/forms/tender-update.js",
+    "test:forms:tender:create": "k6 run tests/forms/tender-create.js",
+    "test:forms:tender:read": "k6 run tests/forms/tender-read.js",
+    "test:forms:tender:update": "k6 run tests/forms/tender-update.js",
+    
+    "test:feed-viewer:complete": "k6 run tests/forms/feed-viewer-complete.js",
+    "test:feed-viewer:complete:quiet": "k6 run --quiet tests/forms/feed-viewer-complete.js",
+    "test:feed-viewer:complete:verbose": "k6 run --verbose tests/forms/feed-viewer-complete.js",
+    
+    "test:quick-create:complete": "k6 run tests/forms/quick-create-complete.js",
+    "test:quick-create:complete:quiet": "k6 run --quiet tests/forms/quick-create-complete.js",
+    "test:quick-create:complete:verbose": "k6 run tests/forms/quick-create-complete.js --summary-export=quick-create-results.json",
+    
+    "test:my-profiles:complete": "k6 run tests/forms/my-profiles-complete.js",
+    "test:my-profiles:complete:quiet": "k6 run --quiet tests/forms/my-profiles-complete.js",
+    "test:my-profiles:complete:verbose": "k6 run tests/forms/my-profiles-complete.js --summary-export=my-profiles-results.json",
+    
+    "test:all-sequential": "powershell -ExecutionPolicy Bypass -File scripts/run-all-tests.ps1",
+    "report:html": "node scripts/generate-html-report.js",
+    "test:full": "npm run test:all-sequential && npm run report:html"
+  },
+  "author": "",
+  "license": "MIT"
+}
