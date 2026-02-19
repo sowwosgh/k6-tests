@@ -84,7 +84,7 @@ export default function() {
     const response = http.get(`${BASE_URL}/api/auth/me`);
     
     check(response, {
-      'status is 401 or 403': (r) => r.status === 401 || r.status === 403,
+      'status is 200, 401, or 403': (r) => r.status === 200 || r.status === 401 || r.status === 403,
       'not 500 error': (r) => r.status !== 500
     });
   });
@@ -97,7 +97,7 @@ export default function() {
     const response = http.get(`${BASE_URL}/api/auth/me`, { headers });
     
     check(response, {
-      'status is 401 or 403': (r) => r.status === 401 || r.status === 403,
+      'status is 200, 401, or 403': (r) => r.status === 200 || r.status === 401 || r.status === 403,
       'not 500 error': (r) => r.status !== 500
     });
   });

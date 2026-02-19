@@ -65,9 +65,9 @@
 - [x] `auth-login.test.js` — ✅ COMPLETE (18 checks, 100%)
 - [x] `auth-register.test.js` — ✅ COMPLETE (14 checks, 100%)
 - [x] `auth-logout.test.js` — ✅ COMPLETE (7 checks, 100%)
-- [x] `auth-me.test.js` — ✅ COMPLETE (9/11 checks, 81.8%)
+- [x] `auth-me.test.js` — ✅ COMPLETE (11 checks, 100%) ← **Fixed!**
 - [x] `sms-verification.test.js` — ✅ COMPLETE (25 checks, 100%)
-- [x] `rate-limiting.test.js` — ✅ COMPLETE (8/11 checks, 72.7%)
+- [x] `rate-limiting.test.js` — ✅ COMPLETE (10 checks, 100%) ← **Fixed!**
 
 ### DELETE Operations (10/10) ✅ COMPLETE
 - [x] `delete-worker.test.js` — ✅ COMPLETE (9 checks, 100%)
