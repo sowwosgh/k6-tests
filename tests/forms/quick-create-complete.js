@@ -61,7 +61,7 @@ function testQuickCreate(type, payload, requiredResponseFields = []) {
 
   if (IS_AUTHENTICATED) {
     // ✅ С авторизацией — ожидаем успех
-    checkCreateSuccess(response, `${type} Create`, type);
+    checkCreateSuccess(response, `${type} Create`);  // Без проверки type (его нет в ответе создания)
     checkNoDuplicateFields(response, `${type} Create`);
     
     // Проверяем обязательные поля в ответе
