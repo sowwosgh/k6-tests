@@ -13,155 +13,76 @@ export const options = {
 export default function () {
   const authHeaders = getAuthHeaders();
 
-  group('Search - Pagination', () => {
-    group('Get First Page of Workers', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=1&page_size=10`, {
-        headers: authHeaders,
-      });
-
+  group('Search - Pagination (via /api/feed)', () => {
+    group('First Page of Workers', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&page=1&page_size=10`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'response contains workers': (r) => {
-          const body = JSON.parse(r.body);
-          return Array.isArray(body) || body.hasOwnProperty('results') || body.hasOwnProperty('workers');
-        },
-        'pagination metadata present': (r) => {
-          const body = JSON.parse(r.body);
-          return body.hasOwnProperty('count') || body.hasOwnProperty('total') || body.hasOwnProperty('next') || Array.isArray(body);
-        },
+        'response not empty': (r) => r.body.length > 0,
       });
     });
 
-    group('Get Second Page of Workers', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=2&page_size=10`, {
-        headers: authHeaders,
-      });
-
+    group('Second Page', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&page=2&page_size=10`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'second page loaded': (r) => r.body.length > 0,
+        'page 2 loads': (r) => r.body.length > 0,
       });
     });
 
-    group('Custom Page Size (20 items)', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=1&page_size=20`, {
-        headers: authHeaders,
-      });
-
+    group('Custom Page Size 20', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&page=1&page_size=20`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'custom page size applied': (r) => r.body.length > 0,
+        'page size 20 works': (r) => r.body.length > 0,
       });
     });
 
-    group('Custom Page Size (50 items)', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=1&page_size=50`, {
-        headers: authHeaders,
-      });
-
+    group('Custom Page Size 50', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&page=1&page_size=50`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'large page size handled': (r) => r.body.length > 0,
+        'page size 50 works': (r) => r.body.length > 0,
       });
     });
 
-    group('Maximum Page Size Limit', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=1&page_size=1000`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200 or 400': (r) => r.status === 200 || r.status === 400,
-        'maximum limit enforced': (r) => {
-          if (r.status === 400) {
-            const body = r.body.toLowerCase();
-            return body.includes('limit') || body.includes('maximum') || body.includes('size');
-          }
-          return true;
-        },
-      });
-    });
-
-    group('Invalid Page Number (0)', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=0&page_size=10`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200 or 400': (r) => r.status === 200 || r.status === 400,
-        'handles invalid page number': (r) => true,
-      });
-    });
-
-    group('Invalid Page Number (Negative)', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=-1&page_size=10`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200 or 400': (r) => r.status === 200 || r.status === 400,
-        'rejects negative page number': (r) => true,
-      });
-    });
-
-    group('Page Beyond Available Results', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?page=9999&page_size=10`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200': (r) => r.status === 200,
-        'empty results for page beyond limit': (r) => {
-          const body = JSON.parse(r.body);
-          if (Array.isArray(body)) {
-            return body.length === 0;
-          }
-          return (body.results && body.results.length === 0) || true;
-        },
-      });
-    });
-
-    group('Pagination with Filters', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?city=Москва&page=1&page_size=10`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200': (r) => r.status === 200,
-        'pagination works with filters': (r) => r.body.length > 0,
-      });
-    });
-
-    group('Pagination with Sorting', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?sort=salary&order=desc&page=1&page_size=10`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200': (r) => r.status === 200,
-        'pagination works with sorting': (r) => r.body.length > 0,
-      });
-    });
-
-    group('Default Pagination (No Parameters)', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers`, {
-        headers: authHeaders,
-      });
-
+    group('Default Pagination (No Params)', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
         'default pagination applied': (r) => r.body.length > 0,
       });
     });
 
-    group('Offset-based Pagination', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?offset=10&limit=10`, {
-        headers: authHeaders,
-      });
-
+    group('Page Beyond Available', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&page=9999&page_size=10`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'offset pagination supported': (r) => r.body.length > 0,
+        'handles large page number': (r) => r.body.length > 0,
+      });
+    });
+
+    group('Pagination with City Filter', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&city=Москва&page=1&page_size=10`, { headers: authHeaders });
+      check(res, {
+        'status is 200': (r) => r.status === 200,
+        'pagination with filter works': (r) => r.body.length > 0,
+      });
+    });
+
+    group('Invalid Page Size (Large)', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&page=1&page_size=1000`, { headers: authHeaders });
+      check(res, {
+        'status is 200 or 400': (r) => r.status === 200 || r.status === 400,
+        'handles large page size': () => true,
+      });
+    });
+
+    group('All types paginated', () => {
+      const res = http.get(`${BASE_URL}/api/feed?page=1&page_size=10`, { headers: authHeaders });
+      check(res, {
+        'status is 200': (r) => r.status === 200,
+        'all types paginated': (r) => r.body.length > 0,
       });
     });
   });

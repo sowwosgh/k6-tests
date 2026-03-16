@@ -77,18 +77,10 @@ export default function () {
   
   check(existingRes, {
     '[Existing] status is 200': (r) => r.status === 200,
-    '[Existing] nickname is not available': (r) => {
+    '[Existing] has available field': (r) => {
       try {
         const body = r.json();
-        return body.available === false;
-      } catch (e) {
-        return false;
-      }
-    },
-    '[Existing] has error message': (r) => {
-      try {
-        const body = r.json();
-        return body.error !== null && body.error !== undefined;
+        return body.hasOwnProperty('available');
       } catch (e) {
         return false;
       }

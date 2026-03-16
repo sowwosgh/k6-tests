@@ -37,7 +37,7 @@ export default function () {
     check(conversationsRes, {
       '✅ conversations: статус 200':       (r) => r.status === 200,
       '✅ conversations: JSON ответ':        (r) => isJsonResponse(r),
-      '✅ conversations: массив диалогов':   () => Array.isArray(conversationsBody),
+      '✅ conversations: массив диалогов':   () => Array.isArray(conversationsBody?.conversations),
     });
   } else {
     check(conversationsRes, {

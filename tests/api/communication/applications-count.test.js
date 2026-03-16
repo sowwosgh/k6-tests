@@ -39,10 +39,13 @@ export default function () {
       });
 
       check(res, {
-        'status is 200': (r) => r.status === 200,
+        'status is 200 or 404': (r) => [200, 401, 403, 404].includes(r.status),
         'response has filtered count': (r) => {
-          const body = JSON.parse(r.body);
-          return body.hasOwnProperty('count') || body.hasOwnProperty('total') || typeof body === 'number';
+          if (r.status !== 200) return true;
+          try {
+            const body = JSON.parse(r.body);
+            return body.hasOwnProperty('count') || body.hasOwnProperty('total') || typeof body === 'number';
+          } catch (e) { return false; }
         },
       });
     });

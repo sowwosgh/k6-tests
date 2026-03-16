@@ -13,116 +13,68 @@ export const options = {
 export default function () {
   const authHeaders = getAuthHeaders();
 
-  group('Search - Filter by City', () => {
-    group('Search Workers in Moscow', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?city=Москва`, {
-        headers: authHeaders,
-      });
-
+  group('Search - Filter by City (via /api/feed)', () => {
+    group('Workers in Moscow', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&city=Москва`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'response contains workers': (r) => {
-          const body = JSON.parse(r.body);
-          return Array.isArray(body) || body.hasOwnProperty('results') || body.hasOwnProperty('workers');
-        },
-        'results are filtered by city': (r) => r.body.length > 0,
+        'response is not empty': (r) => r.body.length > 0,
       });
     });
 
-    group('Search Workers in Saint Petersburg', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?city=Санкт-Петербург`, {
-        headers: authHeaders,
-      });
-
+    group('Workers in Saint Petersburg', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&city=Санкт-Петербург`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
         'city filter applied': (r) => r.body.length > 0,
       });
     });
 
-    group('Search with City ID', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?city_id=1`, {
-        headers: authHeaders,
-      });
-
+    group('Brigades by City', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=brigade&city=Москва`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'city ID filter works': (r) => r.body.length > 0,
+        'brigades returned': (r) => r.body.length > 0,
       });
     });
 
-    group('Search Brigades by City', () => {
-      const res = http.get(`${BASE_URL}/api/search/brigades?city=Москва`, {
-        headers: authHeaders,
-      });
-
+    group('Vacancies by City', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=vacancy&city=Москва`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'brigades filtered by city': (r) => {
-          const body = JSON.parse(r.body);
-          return Array.isArray(body) || body.hasOwnProperty('results');
-        },
+        'vacancies returned': (r) => r.body.length > 0,
       });
     });
 
-    group('Search Vacancies by City', () => {
-      const res = http.get(`${BASE_URL}/api/search/vacancies?city=Москва`, {
-        headers: authHeaders,
-      });
-
+    group('Orders by City', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=order&city=Москва`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'vacancies in specified city': (r) => r.body.length > 0,
+        'orders returned': (r) => r.body.length > 0,
       });
     });
 
-    group('Search Orders by City', () => {
-      const res = http.get(`${BASE_URL}/api/search/orders?city=Москва`, {
-        headers: authHeaders,
-      });
-
+    group('Non-existent City', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&city=НесуществующийГород12345`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'orders filtered correctly': (r) => r.body.length > 0,
+        'returns valid response': (r) => r.body.length > 0,
       });
     });
 
-    group('Search with Non-existent City', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?city=НесуществующийГород12345`, {
-        headers: authHeaders,
-      });
-
+    group('Without City Filter', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'empty results for non-existent city': (r) => {
-          const body = JSON.parse(r.body);
-          if (Array.isArray(body)) {
-            return body.length === 0;
-          }
-          return (body.results && body.results.length === 0) || (body.workers && body.workers.length === 0) || true;
-        },
+        'returns workers without city filter': (r) => r.body.length > 0,
       });
     });
 
-    group('Search Without City Filter', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers`, {
-        headers: authHeaders,
-      });
-
+    group('Combined City + Type Filter', () => {
+      const res = http.get(`${BASE_URL}/api/feed?type=worker&city=Москва&page=1&page_size=10`, { headers: authHeaders });
       check(res, {
         'status is 200': (r) => r.status === 200,
-        'returns all workers without filter': (r) => r.body.length > 0,
-      });
-    });
-
-    group('Multiple City Parameters', () => {
-      const res = http.get(`${BASE_URL}/api/search/workers?city=Москва&city=Санкт-Петербург`, {
-        headers: authHeaders,
-      });
-
-      check(res, {
-        'status is 200': (r) => r.status === 200,
-        'handles multiple cities': (r) => r.body.length > 0,
+        'combined filter works': (r) => r.body.length > 0,
       });
     });
   });
