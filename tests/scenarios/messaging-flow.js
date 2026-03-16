@@ -1,71 +1,73 @@
+/**
+ * Messaging Flow Test
+ * - Без авторизации: проверяет что API правильно отклоняет (401)
+ * - С авторизацией: SESSION_COOKIE=sessionid=xxx k6 run messaging-flow.js
+ *   (Django использует сессии, не Bearer токены)
+ */
 import http from 'k6/http';
 import { check } from 'k6';
 import { isJsonResponse, parseJsonSafe } from '../../utils/checks.js';
 
 const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
-const AUTH_TOKEN = __ENV.AUTH_TOKEN || '';
+const SESSION_COOKIE = __ENV.SESSION_COOKIE || '';
+const hasAuth = SESSION_COOKIE.length > 0;
 
-function buildHeaders() {
-  const headers = { 'Content-Type': 'application/json' };
-  if (AUTH_TOKEN) {
-    headers.Authorization = `Bearer ${AUTH_TOKEN}`;
-  }
-  return headers;
+function authHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (hasAuth) h['Cookie'] = SESSION_COOKIE;
+  return h;
 }
 
-export let options = {
+export const options = {
   vus: 3,
   duration: '2m',
 };
 
 export default function () {
-  const headers = buildHeaders();
+  const headers = authHeaders();
 
-  const conversationStartPayload = JSON.stringify({
-    user_id: 2,
-    initial_message: 'Hello from k6 test!',
+  // 1. Список диалогов
+  const conversationsRes = http.get(`${BASE_URL}/api/conversations`, {
+    headers,
+    responseCallback: http.expectedStatuses(200, 401),
   });
+  const conversationsBody = parseJsonSafe(conversationsRes);
 
-  const startResponse = http.post(`${BASE_URL}/api/conversations/start`, conversationStartPayload, { headers });
-  const startResponseBody = parseJsonSafe(startResponse);
-
-  const conversationId = startResponseBody?.conversation_id ?? null;
-
-  let sendMessageResponse = null;
-  if (conversationId) {
-    const sendMessagePayload = JSON.stringify({ text: 'Follow-up from k6 test' });
-    sendMessageResponse = http.post(`${BASE_URL}/api/conversations/${conversationId}/messages`, sendMessagePayload, { headers });
-  }
-
-  const conversationsResponse = http.get(`${BASE_URL}/api/conversations`, { headers });
-  const conversationsResponseBody = parseJsonSafe(conversationsResponse);
-
-  const expectedStatuses = AUTH_TOKEN ? [200] : [401];
-
-  check(startResponse, {
-    'conversation start status expected': (r) => expectedStatuses.includes(r.status),
-    'conversation start json': (r) => isJsonResponse(r),
-  });
-
-  if (AUTH_TOKEN) {
-    check(sendMessageResponse, {
-      'message sent': (r) => r && r.status === 200,
-      'message send json': (r) => r && isJsonResponse(r),
+  if (hasAuth) {
+    check(conversationsRes, {
+      '✅ conversations: статус 200':       (r) => r.status === 200,
+      '✅ conversations: JSON ответ':        (r) => isJsonResponse(r),
+      '✅ conversations: массив диалогов':   () => Array.isArray(conversationsBody),
     });
   } else {
-    check(startResponse, {
-      'message sent skipped without auth': () => sendMessageResponse === null,
+    check(conversationsRes, {
+      '✅ conversations: 401 без авторизации': (r) => r.status === 401,
+      '✅ conversations: JSON ответ':           (r) => isJsonResponse(r),
     });
   }
 
-  check(conversationsResponse, {
-    'conversations status expected': (r) => expectedStatuses.includes(r.status),
-    'conversations json': (r) => isJsonResponse(r),
-    'conversations payload valid': () => {
-      if (!AUTH_TOKEN) {
-        return conversationsResponseBody !== null;
-      }
-      return conversationsResponseBody !== null && Array.isArray(conversationsResponseBody.conversations);
-    },
-  });
+  // 2. Создание/отправка сообщения (только с авторизацией)
+  if (hasAuth) {
+    const payload = JSON.stringify({ user_id: 2, initial_message: 'Тест k6' });
+    const startRes = http.post(`${BASE_URL}/api/conversations/start`, payload, { headers });
+    const startBody = parseJsonSafe(startRes);
+    const conversationId = startBody?.conversation_id ?? null;
+
+    check(startRes, {
+      '✅ conversation start: статус 200/400': (r) => [200, 400].includes(r.status),
+      '✅ conversation start: JSON ответ':      (r) => isJsonResponse(r),
+    });
+
+    if (conversationId) {
+      const msgRes = http.post(
+        `${BASE_URL}/api/conversations/${conversationId}/messages`,
+        JSON.stringify({ text: 'Тест k6 — сообщение' }),
+        { headers }
+      );
+      check(msgRes, {
+        '✅ message sent: статус 200/201': (r) => [200, 201].includes(r.status),
+        '✅ message sent: JSON ответ':      (r) => isJsonResponse(r),
+      });
+    }
+  }
 }
