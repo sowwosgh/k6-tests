@@ -294,6 +294,27 @@ BASE_URL=http://localhost:8000 k6 run tests/smoke/production-smoke.js
 
 ---
 
+## Как запустить delete-тесты и auth-login
+
+Delete-тесты и auth-login требуют тестового пользователя `+79001234567` / `test123` в продакшне.
+
+**Создать тестового юзера на сервере:**
+```bash
+# На продакшн-сервере (в директории backend/)
+python manage.py create_test_user
+# Или с кастомными параметрами:
+python manage.py create_test_user --phone +79001234567 --password test123
+```
+
+**После создания — запустить delete-тесты:**
+```bash
+SESSION_COOKIE="sessionid=..." k6 run tests/api/listings/delete-order.test.js
+SESSION_COOKIE="sessionid=..." k6 run tests/api/profiles/delete-worker.test.js
+# и т.д.
+```
+
+---
+
 ## Когда повторить тесты
 
 - После значительных изменений в API
