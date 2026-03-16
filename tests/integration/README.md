@@ -50,7 +50,7 @@ export const options = {
 };
 
 export default function() {
-  const BASE_URL = 'http://localhost:8000';
+  const BASE_URL = 'https://sowwos.ru';
   let sessionid;
   
   group('Step 1: Register User', () => {

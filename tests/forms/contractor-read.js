@@ -17,7 +17,7 @@ import {
  *   CONTRACTOR_ID=1 SESSION_COOKIE="..." k6 run tests/forms/contractor-read.js
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const CONTRACTOR_ID = __ENV.CONTRACTOR_ID || '1';
 const SESSION_COOKIE = __ENV.SESSION_COOKIE || '';
 

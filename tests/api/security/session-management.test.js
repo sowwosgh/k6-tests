@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { check, group } from 'k6';
 
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const TEST_PHONE = '+79001234567';
 const TEST_PASSWORD = 'test123';
 

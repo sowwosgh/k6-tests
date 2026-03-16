@@ -34,7 +34,7 @@ import {
  * 5. Отсутствие ошибок и дублей полей
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const IS_AUTHENTICATED = __ENV.SESSION_COOKIE ? true : false;
 
 export const options = {

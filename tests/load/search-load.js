@@ -4,7 +4,7 @@ import { randomItem } from '../../utils/data-helpers.js';
 import { isJsonResponse, parseJsonSafe } from '../../utils/checks.js';
 
 const SEARCH_QUERIES = ['developer', 'designer', 'manager', 'driver'];
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 
 export let options = {
   stages: [

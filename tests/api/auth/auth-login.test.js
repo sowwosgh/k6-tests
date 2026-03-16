@@ -11,7 +11,7 @@ export const options = {
   }
 };
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'https://sowwos.ru';
 
 export default function() {
   // Use existing test user from backend seed data

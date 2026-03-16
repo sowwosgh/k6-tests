@@ -31,7 +31,7 @@ import {
  * 6. Правильный тип профиля возвращается
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 
 // ID профилей для тестирования (передаются через env vars или дефолтные)
 const WORKER_ID = __ENV.WORKER_ID || '1';

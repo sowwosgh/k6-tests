@@ -13,7 +13,7 @@ import { parseJsonSafe } from '../../utils/checks.js';
  *   BRIGADE_ID=1 SESSION_COOKIE="..." k6 run tests/forms/brigade-update.js
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const BRIGADE_ID = __ENV.BRIGADE_ID || '1';
 const SESSION_COOKIE = __ENV.SESSION_COOKIE || '';
 

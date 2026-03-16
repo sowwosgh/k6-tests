@@ -82,7 +82,7 @@ export const options = {
 };
 
 export default function() {
-  const BASE_URL = 'http://localhost:8000';
+  const BASE_URL = 'https://sowwos.ru';
   
   const response = http.get(`${BASE_URL}/api/feed`);
   

@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 import { loginAndGetSession } from '../../../utils/auth.js';
 
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const TEST_USER = '+79001234567';
 const TEST_PASSWORD = 'test123';
 

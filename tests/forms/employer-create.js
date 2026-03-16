@@ -15,7 +15,7 @@ import { generateINN, generateCompanyName, generatePhone, generateEmail, pause }
  *   SESSION_COOKIE="your-sessionid" k6 run tests/forms/employer-create.js
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const SESSION_COOKIE = __ENV.SESSION_COOKIE || '';
 
 export const options = {

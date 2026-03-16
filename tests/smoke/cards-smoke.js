@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 const CARD_TYPES = ['worker', 'company', 'brigade', 'contractor'];
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 
 function parseJsonSafe(response) {
   const contentType = response.headers['Content-Type'] || response.headers['content-type'] || '';

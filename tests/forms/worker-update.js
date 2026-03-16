@@ -14,7 +14,7 @@ import {
  * Проверяет: редактирование, обновление полей
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const WORKER_ID = __ENV.WORKER_ID || '1';
 
 export const options = {

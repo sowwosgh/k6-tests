@@ -13,7 +13,7 @@ import { parseJsonSafe } from '../../utils/checks.js';
  *   RESUME_ID=1 SESSION_COOKIE="..." k6 run tests/forms/resume-update.js
  */
 
-const BASE_URL = __ENV.BASE_URL || 'http://127.0.0.1:8000';
+const BASE_URL = __ENV.BASE_URL || 'https://sowwos.ru';
 const RESUME_ID = __ENV.RESUME_ID || '1';
 const SESSION_COOKIE = __ENV.SESSION_COOKIE || '';
 
