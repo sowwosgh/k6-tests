@@ -73,7 +73,7 @@ export default function () {
     
     // First purchase attempt
     const res1 = http.post(
-      `${BASE_URL}/api/purchase-contact`,
+      `${BASE_URL}/api/contacts/unlock`,
       payload,
       { 
         headers,
@@ -88,7 +88,7 @@ export default function () {
     
     // Second purchase attempt (should be prevented or return same result)
     const res2 = http.post(
-      `${BASE_URL}/api/purchase-contact`,
+      `${BASE_URL}/api/contacts/unlock`,
       payload,
       { 
         headers,

@@ -67,6 +67,14 @@ export default function () {
     '✅ Вакансии API: статус 200 или 404': (r) => r.status === 200 || r.status === 404,
     '✅ Вакансии API: не упал': (r) => r.status < 500,
   });
+  sleep(0.5);
+
+  // 6. Отзывы (публичный GET)
+  const reviewsRes = http.get(`${BASE_URL}/api/reviews?profile_type=worker&profile_id=1`, { headers });
+  check(reviewsRes, {
+    '✅ Отзывы API: статус 200': (r) => r.status === 200,
+    '✅ Отзывы API: JSON ответ': (r) => r.headers['Content-Type'] && r.headers['Content-Type'].includes('application/json'),
+  });
 }
 
 export function handleSummary(data) {
