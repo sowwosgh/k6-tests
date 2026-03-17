@@ -1,6 +1,6 @@
 # SOWWOS — Результаты нагрузочного тестирования
 
-**Последнее обновление:** 16 марта 2026
+**Последнее обновление:** 17 марта 2026
 **Инструмент:** k6 v1.5.0
 **Цель:** https://sowwos.ru (продакшн)
 
@@ -13,11 +13,11 @@
 
 ---
 
-## Статус всех тестов (16.03.2026)
+## Статус всех тестов (17.03.2026)
 
 | Тест | VU | Результат | Ошибок | P95 |
 |---|---|---|---|---|
-| `smoke/production-smoke.js` | 1 | ✅ 9/9 | 0% | 412ms |
+| `smoke/production-smoke.js` | 1 | ✅ 11/11 | 0% | 837ms |
 | `smoke/api-health.js` | 1 | ✅ 100% | 0% | 270ms |
 | `smoke/cards-smoke.js` | 1 | ✅ 100% | 0% | 315ms |
 | `smoke/filters-smoke.js` | 1 | ✅ 100% | 0% | 275ms |
@@ -71,7 +71,7 @@ BASE_URL=http://localhost:8000 k6 run tests/smoke/production-smoke.js
 
 ---
 
-## API-тесты (96 файлов, 16.03.2026 — все зелёные ✅)
+## API-тесты (17.03.2026 — все зелёные ✅)
 
 Запуск: `SESSION_COOKIE="sessionid=..." k6 run tests/api/путь/к/тесту.js`
 
@@ -108,9 +108,10 @@ BASE_URL=http://localhost:8000 k6 run tests/smoke/production-smoke.js
 | Файл | Статус | Что проверяет |
 |---|---|---|
 | `feed-filtering` | ✅ | Фильтры типа (`type=worker`, `type=vacancy`, `type=order` и т.д.), комбинированные фильтры |
-| `feed-favorites-flag` | ✅ | Флаг `is_favorite` в элементах ленты, добавление в избранное и проверка изменения флага |
-| `feed-my-feed` | ✅ | Персональная лента (`GET /api/my-feed`): авторизованный доступ, блокировка без авторизации |
+| `feed-favorites-flag` | ✅ 20/20 | Флаг `is_favorite` в элементах ленты, добавление в избранное и проверка изменения флага |
+| `feed-my-feed` | ✅ 19/19 | Персональная лента (`GET /api/my-feed`): авторизованный доступ, блокировка без авторизации |
 | `feed-paywall` | ✅ | Пейволл и маскировка контактов: анонимный доступ, поле `is_masked` в профилях, подписка (`/api/subscriptions/current`) |
+| `feed-visibility` | ✅ **19/19** | CREATE → появляется в ленте; DELETE → исчезает из ленты (MaterializedFeed deactivation + cache invalidation); фильтры по всем типам |
 
 ---
 
@@ -167,11 +168,12 @@ BASE_URL=http://localhost:8000 k6 run tests/smoke/production-smoke.js
 | `contacts-idempotency` | ✅ | Идемпотентность покупки контактов: повторный запрос не списывает кредиты дважды |
 | `promotions-packages` | ✅ | Список пакетов продвижения (`GET /api/promotions/packages`): типы, цены |
 | `promotions-pricing` | ✅ | Цены на промо-услуги: буст, срочность, размещение |
-| `promotions-boost` | ✅ | Применение буста к профилю (`POST /api/promotions/boost`): поднятие в выдаче |
-| `promotions-urgent` | ✅ | Отметка объявления как «срочного» (`POST /api/promotions/urgent`) |
+| `promotions-boost` | ✅ 4/4 | Применение буста к профилю (`POST /api/promotions/boost`): поднятие в выдаче |
+| `promotions-urgent` | ✅ 4/4 | Отметка объявления как «срочного» (`POST /api/promotions/urgent`) |
 | `promotions-active-boosts` | ✅ | Список активных бустов пользователя |
 | `promotions-active-urgents` | ✅ | Список активных срочных объявлений |
-| `promotions-active-profile` | ✅ | Активные промо для конкретного профиля |
+| `promotions-active-profile` | ✅ 5/5 | Активные промо для конкретного профиля |
+| `billing-profile-stats` | ✅ 4/4 | Статистика биллинга по профилям (auth + unauth) |
 | `subscriptions-plans` | ✅ | Список тарифных планов (`GET /api/subscriptions/plans`): базовый, про, премиум |
 | `subscriptions-current` | ✅ | Текущая подписка пользователя: тип, срок истечения, лимиты |
 | `subscriptions-subscribe` | ✅ | Оформление подписки: выбор плана, создание платежа |
@@ -234,6 +236,38 @@ BASE_URL=http://localhost:8000 k6 run tests/smoke/production-smoke.js
 
 ---
 
+### 👤 CRUD профилей (`tests/api/profiles/`)
+
+| Файл | Статус | Что проверяет |
+|---|---|---|
+| `worker-crud` | ✅ 11/11 | CREATE → READ → UPDATE → DELETE; auth/unauth, 404 после удаления |
+| `brigade-crud` | ✅ 11/11 | Полный цикл бригады |
+| `contractor-crud` | ✅ 11/11 | Полный цикл подрядчика (с генерацией ИНН) |
+| `customer-crud` | ✅ 11/11 | Полный цикл заказчика (с генерацией ИНН) |
+
+---
+
+### 📋 CRUD публикаций (`tests/api/listings/`)
+
+| Файл | Статус | Что проверяет |
+|---|---|---|
+| `vacancy-crud` | ✅ 11/11 | CREATE → READ → UPDATE → DELETE вакансии |
+| `resume-crud` | ✅ 9/9 | Полный цикл резюме |
+| `order-crud` | ✅ 8/8 | Полный цикл заказа (GET по ID не реализован → list check) |
+| `tender-crud` | ✅ 8/8 | Полный цикл тендера (GET по ID не реализован → list check) |
+
+---
+
+### 🔗 Интеграционные тесты (`tests/integration/`)
+
+| Файл | Статус | Что проверяет |
+|---|---|---|
+| `full-lifecycle` | ✅ 13/13 | CREATE → FEED → VIEW → UNLOCK → REVIEW → RE-UNLOCK → DELETE |
+| `feed-update-reaction` | ✅ **11/11** | CREATE → FeedA(SPEC_A) → PATCH(SPEC_B) → FeedB(SPEC_B отражён) → DELETE; проверяет что `sync_worker()` обновляет MaterializedFeed синхронно |
+| `access-control` | ✅ 5/5 | Кросс-аккаунтные проверки: User A не может изменить профиль User B |
+
+---
+
 ### 🗑️ Удаление объявлений (`tests/api/listings/`)
 
 | Файл | Статус | Что проверяет |
@@ -269,6 +303,19 @@ BASE_URL=http://localhost:8000 k6 run tests/smoke/production-smoke.js
 | `security/csrf-protection` | Login для CSRF-теста возвращает 429 (rate limit) — 9/10 checks зелёные |
 | `security/session-management` | То же — 9/10 checks зелёные |
 | `communication/media-*` (4 теста) | k6 не поддерживает бинарный multipart из файловой системы — требует отдельного инструмента |
+
+---
+
+### Исправления (17.03.2026)
+
+| Тест | Проблема | Результат |
+|---|---|---|
+| `feed-visibility` | После soft-delete профиль оставался в ленте из-за 60-сек кэша фида | ✅ `invalidate_feed_cache()` вызывается во всех 9 delete-эндпоинтах |
+| `feed-visibility` | `MaterializedFeed.is_active` не сбрасывался при удалении | ✅ Явный `.update(is_active=False)` в каждом delete-эндпоинте |
+| `promotions-boost/urgent` | Внутренний `login()` игнорировал `SESSION_COOKIE` | ✅ Переписаны на `getAuthHeaders()` из config.js |
+| `promotions-boost/urgent` unauth | 422 вместо ожидаемых 401/403 | ✅ 422 добавлен к валидным статусам |
+| `promotions-active-profile`, `billing-profile-stats` | `r.json()` падал на HTML 404-ответах | ✅ Заменён на `r.body && r.body.length > 0` |
+| `config.js` SESSION_COOKIE | Кука отправлялась без префикса `sessionid=` | ✅ `c.includes('=') ? c : \`sessionid=${c}\`` |
 
 ---
 

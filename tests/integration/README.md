@@ -4,14 +4,16 @@ End-to-end integration тесты для валидации полных user jo
 
 ## 📁 Тесты
 
-| Test File                          | Description                              | Duration | Status |
-|------------------------------------|------------------------------------------|----------|--------|
-| `e2e-worker-journey.test.js`       | Register → Create → Boost → Message     | ~5min    | 🔴 TODO |
-| `e2e-employer-journey.test.js`     | Create Vacancy → Applications → Status  | ~5min    | 🔴 TODO |
-| `e2e-monetization-flow.test.js`    | Credits → Purchase → Use                | ~3min    | 🔴 TODO |
-| `e2e-subscription-flow.test.js`    | Subscribe → Use → Cancel                | ~3min    | 🔴 TODO |
-| `e2e-contacts-purchase.test.js`    | Full contact purchase flow              | ~3min    | 🔴 TODO |
-| `e2e-full-lifecycle.test.js`       | Complete user lifecycle                 | ~10min   | 🔴 TODO |
+| Test File                          | Description                                       | Checks | Status |
+|------------------------------------|---------------------------------------------------|--------|--------|
+| `full-lifecycle.test.js`           | CREATE → FEED → VIEW → UNLOCK → REVIEW → DELETE  | 13/13  | ✅ |
+| `feed-update-reaction.test.js`     | PATCH профиля → MaterializedFeed синхронизирован  | 11/11  | ✅ |
+| `e2e-worker-journey.test.js`       | Register → Create → Boost → Message              | —      | 🔴 TODO |
+| `e2e-employer-journey.test.js`     | Create Vacancy → Applications → Status           | —      | 🔴 TODO |
+| `e2e-monetization-flow.test.js`    | Credits → Purchase → Use                         | —      | 🔴 TODO |
+| `e2e-subscription-flow.test.js`    | Subscribe → Use → Cancel                         | —      | 🔴 TODO |
+| `e2e-contacts-purchase.test.js`    | Full contact purchase flow                       | —      | 🔴 TODO |
+| `e2e-full-lifecycle.test.js`       | Complete user lifecycle (legacy)                 | —      | ⚠️ |
 
 **Total:** 0/6 (0%)
 
