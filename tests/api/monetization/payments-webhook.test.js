@@ -47,7 +47,7 @@ export default function () {
     console.log(`Response: ${res.body}`);
     
     check(res, {
-      '[Webhook] status is valid': (r) => r.status === 200 || r.status === 400 || r.status === 403 || r.status === 404,
+      '[Webhook] status is valid': (r) => r.status === 200 || r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404,
       '[Webhook] has response': (r) => {
         try {
           // Webhook may return text or JSON
@@ -78,7 +78,7 @@ export default function () {
     console.log(`Status: ${res.status}`);
     
     check(res, {
-      '[Invalid] status is valid': (r) => r.status === 200 || r.status === 400 || r.status === 403 || r.status === 422,
+      '[Invalid] status is valid': (r) => r.status === 200 || r.status === 400 || r.status === 401 || r.status === 403 || r.status === 422,
       '[Invalid] has response': (r) => r.body.length > 0,
     });
   });

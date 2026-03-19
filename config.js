@@ -14,7 +14,8 @@ export function getAuthHeaders() {
     headers['Authorization'] = `Bearer ${__ENV.AUTH_TOKEN}`;
   }
   if (__ENV.SESSION_COOKIE) {
-    headers['Cookie'] = __ENV.SESSION_COOKIE;
+    const c = __ENV.SESSION_COOKIE;
+    headers['Cookie'] = c.includes('=') ? c : `sessionid=${c}`;
   }
   return headers;
 }
@@ -22,7 +23,8 @@ export function getAuthHeaders() {
 export function getSessionHeaders() {
   const headers = { 'Content-Type': 'application/json' };
   if (__ENV.SESSION_COOKIE) {
-    headers['Cookie'] = __ENV.SESSION_COOKIE;
+    const c = __ENV.SESSION_COOKIE;
+    headers['Cookie'] = c.includes('=') ? c : `sessionid=${c}`;
   }
   return headers;
 }
