@@ -20,12 +20,19 @@ export function authHeaders() {
 }
 
 export function loginAndGetSession(http, baseUrl, phone, password) {
+  // Если SESSION_COOKIE задан через env — используем напрямую (приоритет)
+  const envCookie = __ENV.SESSION_COOKIE || '';
+  if (envCookie) {
+    const match = envCookie.match(/sessionid=([^;]+)/);
+    return match ? match[1] : envCookie;
+  }
+
   const payload = JSON.stringify({ phone, password });
-  
+
   const response = http.post(`${baseUrl}/api/auth/login`, payload, {
     headers: { 'Content-Type': 'application/json' }
   });
-  
+
   if (response.status === 200) {
     // Извлекаем sessionid из Set-Cookie
     const setCookie = response.headers['Set-Cookie'] || response.headers['set-cookie'];
@@ -36,6 +43,6 @@ export function loginAndGetSession(http, baseUrl, phone, password) {
       }
     }
   }
-  
+
   return null;
 }
