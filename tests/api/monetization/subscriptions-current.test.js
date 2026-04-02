@@ -89,13 +89,10 @@ export default function () {
           return false;
         }
       },
-      '[Current] has subscription field': (r) => {
+      '[Current] has subscription_type': (r) => {
         try {
           const body = r.json();
-          return body.hasOwnProperty('plan') || 
-                 body.hasOwnProperty('subscription') ||
-                 body.hasOwnProperty('plan_id') ||
-                 body.hasOwnProperty('has_subscription');
+          return body.hasOwnProperty('subscription_type');
         } catch (e) {
           return false;
         }
@@ -103,11 +100,9 @@ export default function () {
       '[Current] valid structure': (r) => {
         try {
           const body = r.json();
-          // If user has subscription, validate structure
-          if (body.subscription || body.plan_id || (body.plan && body.plan !== 'free')) {
-            return body.hasOwnProperty('expires_at') || body.hasOwnProperty('is_active');
-          }
-          return true; // No subscription is valid
+          return body.hasOwnProperty('plan_name') &&
+                 body.hasOwnProperty('contacts_remaining') &&
+                 body.hasOwnProperty('can_buy_addon');
         } catch (e) {
           return false;
         }

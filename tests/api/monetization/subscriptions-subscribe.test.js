@@ -70,7 +70,7 @@ export default function () {
     }
     
     const payload = JSON.stringify({
-      plan_id: 1,
+      plan_id: 'basic',
     });
     
     const res = http.post(
@@ -194,7 +194,7 @@ export default function () {
     console.log('\n🔒 Test 4: Unauthenticated access...');
     
     const payload = JSON.stringify({
-      plan_id: 1,
+      plan_id: 'basic',
     });
     
     const res = http.post(
